@@ -27,7 +27,7 @@ int offset = 80;    // The point above average that the clap is detected
 int CLAP_TIME=4000; // The time allowed between each clap
 
 
-int sensorValue = 0; //the value read through mic 
+int sensorValue = 0; //the value read through mic
 
 int toggleOutput = -1;
 
@@ -40,7 +40,7 @@ int total = 0;
 
 
 //BOARD INPUT MIC
-const int inPin0 = A0; 
+const int inPin0 = A0;
 
 //BOARD OUTPUT SIGNALS
 const int clapLed1 = 12, clapLed2 = 11, out = 10, readyPin = 13;
@@ -52,7 +52,7 @@ void setup()
 {
 	Serial.begin(9600);
 
-	//direct representation of the light bulb that toggles on/off  
+	//direct representation of the light bulb that toggles on/off
 	pinMode(out, OUTPUT);
 
 	//once initialize() runs the ready pin turns on
@@ -75,7 +75,7 @@ void loop()
 */
 void initialize()
 {
-	loopIteration = 0; 
+	loopIteration = 0;
 	total = 0;
 	average =0;
 
@@ -94,11 +94,11 @@ void initialize()
 		Serial.print("INIT - AVE: ");
 		Serial.print(average);
 		Serial.print("    Total: ");
-		Serial.print(total); 
+		Serial.print(total);
 		Serial.print("    Sensor: ");
-		Serial.print(sensorValue); 
+		Serial.print(sensorValue);
 		Serial.print("    Change: ");
-		Serial.println(sensorValue-average); 
+		Serial.println(sensorValue-average);
 
 		delay(50);
 	}
@@ -106,7 +106,8 @@ void initialize()
 }
 
 /**
-* Purpose: Runs the detector algorithm. Developers can change the number of claps by adjusting TOTAL_CLAPS_TO_DETECT variable up at the top.
+* Purpose: Runs the detector algorithm. Developers can change the number of
+* claps by adjusting TOTAL_CLAPS_TO_DETECT variable up at the top.
 */
 void runDetector()
 {
@@ -144,16 +145,16 @@ int detectClaps(int numClaps)
 	//Read from mic and update ambient noise levels.
 	readMic();
 
-	total = (total - buffer[loopIteration]) + sensorValue; 
+	total = (total - buffer[loopIteration]) + sensorValue;
 	average = (total/SIZE);
 	buffer[loopIteration] = sensorValue;
 
 	loopIteration = (loopIteration+1)%SIZE;
 
 	if(clapDetected())
-	{ 
+	{
 		Serial.print("detectClaps - Claps:");
-		Serial.println(TOTAL_CLAPS_TO_DETECT + 1 - numClaps); 
+		Serial.println(TOTAL_CLAPS_TO_DETECT + 1 - numClaps);
 
 		printStats();
 		indicateClap(clapNum);
@@ -161,7 +162,7 @@ int detectClaps(int numClaps)
 		delay(100);
 		for(int i = 0; i < CLAP_TIME; i++)
 		{
-			int clapState = detectClaps(clapNum - 1);   
+			int clapState = detectClaps(clapNum - 1);
 
 			if(clapState == FINAL_DETECTED || clapState == LOST_CONTINUITY)
 			{
@@ -211,17 +212,17 @@ void printStats()
 	Serial.print("--- AVE: ");
 	Serial.print(average);
 	Serial.print("    Total: ");
-	Serial.print(total); 
+	Serial.print(total);
 	//Serial.print("    iterNum: ");
-	//Serial.print(loopIteration); 
+	//Serial.print(loopIteration);
 	Serial.print("    Sensor: ");
-	Serial.print(sensorValue); 
+	Serial.print(sensorValue);
 	Serial.print("    Change: ");
 	Serial.println(sensorValue-average); //This is what I used to determine the 'offset' value
 }
 
 /**
-* Purpose:  A clap is detected when the sensor value is greater than the average plus 
+* Purpose:  A clap is detected when the sensor value is greater than the average plus
 *     an offset.  The offset might need to be fine tuned for different sound sensors.
 */
 boolean clapDetected()
@@ -234,5 +235,5 @@ boolean clapDetected()
 */
 void readMic()
 {
-	sensorValue = analogRead(inPin0);  
+	sensorValue = analogRead(inPin0);
 }
